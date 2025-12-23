@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convênios e Planos - Bioteste</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. CONFIGURAÇÕES GERAIS --- */
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #003d80;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8faff;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0; padding: 0; color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 2. CABEÇALHO --- */
+        #bioteste-header { position: relative; z-index: 99999 !important; }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 80px 20px 100px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 86, 179, 0.15);
+        }
+        
+        .page-header::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 70% 30%, rgba(255,255,255,0.05) 0%, transparent 40%);
+            pointer-events: none;
+        }
+
+        .page-header h1 { 
+            margin: 0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; 
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        .page-header p { 
+            margin-top: 15px; font-size: 1.2rem; color: rgba(255,255,255,0.9); font-weight: 400; 
+            animation: fadeInUp 0.8s ease 0.2s forwards; opacity: 0;
+        }
+
+        /* --- 3. CONTEÚDO PRINCIPAL --- */
+        .content-section {
+            max-width: 1200px; margin: -60px auto 0 auto;
+            padding: 0 20px 80px 20px;
+            position: relative; z-index: 10;
+        }
+
+        .main-card {
+            background: white; border-radius: 24px; padding: 50px;
+            box-shadow: 0 20px 40px -5px rgba(0, 86, 179, 0.08);
+            border: 1px solid rgba(255,255,255,1);
+            animation: fadeInUp 0.8s ease 0.4s forwards; opacity: 0;
+        }
+
+        .intro-text { text-align: center; margin-bottom: 50px; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .intro-text h2 { color: var(--text-dark); font-size: 1.8rem; margin-bottom: 15px; font-weight: 700; }
+        .intro-text p { font-size: 1.1rem; line-height: 1.6; color: var(--text-light); }
+
+        /* Divisor de Seção */
+        .section-divider {
+            display: flex; align-items: center; gap: 15px; margin: 60px 0 30px 0;
+        }
+        .section-divider::before, .section-divider::after {
+            content: ''; flex: 1; height: 1px; background: #e2e8f0;
+        }
+        .section-label {
+            font-size: 1.2rem; font-weight: 700; color: var(--primary);
+            background: #eff6ff; padding: 8px 20px; border-radius: 50px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        /* --- 4. GRID DE LOGOS --- */
+        .logos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .logo-card {
+            background: white;
+            border: 1px solid #e2e8f0; border-radius: 16px;
+            height: 120px; /* Altura padrão */
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative; overflow: hidden;
+        }
+
+        .logo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border-color: var(--primary);
+        }
+
+        .logo-img {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; filter: grayscale(100%); opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .logo-card:hover .logo-img { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+
+        /* Skeletons (Carregando) */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%; animation: loading 1.5s infinite;
+        }
+        @keyframes loading { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+        .no-logos {
+            grid-column: 1 / -1; text-align: center; padding: 30px;
+            color: var(--text-light); background: #f8fafc; border-radius: 12px; font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .logos-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .logo-card { height: 100px; }
+            .section-label { font-size: 1rem; padding: 6px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bioteste-header"></div>
+
+    <header class="page-header">
+        <h1>Convênios e Planos</h1>
+        <p>Trabalhamos com os principais parceiros para cuidar da sua saúde.</p>
+    </header>
+
+    <section class="content-section">
+        <div class="main-card">
+            
+            <div class="intro-text">
+                <span class="material-symbols-rounded" style="font-size: 48px; color: var(--primary); opacity: 0.8; margin-bottom: 10px;">handshake</span>
+                <h2>Parcerias de Confiança</h2>
+                <p>
+                    O Laboratório Bioteste mantém parcerias com diversas operadoras de saúde e empresas, garantindo facilidade e agilidade no seu atendimento.
+                </p>
+            </div>
+
+            <div class="section-divider">
+                <div class="section-label">
+                    <span class="material-symbols-rounded">business_center</span> Convênios e Empresas
+                </div>
+            </div>
+
+            <div id="grid-convenios" class="logos-grid">
+                <div class="logo-card loading-skeleton"></div>
+                <div class="logo-card loading-skeleton"></div>
+                <div class="logo-card loading-skeleton"></div>
+                <div class="logo-card loading-skeleton"></div>
+            </div>
+
+            <div class="section-divider">
+                <div class="section-label">
+                    <span class="material-symbols-rounded">medical_services</span> Planos de Saúde
+                </div>
+            </div>
+
+            <div id="grid-planos" class="logos-grid">
+                <div class="logo-card loading-skeleton"></div>
+                <div class="logo-card loading-skeleton"></div>
+                <div class="logo-card loading-skeleton"></div>
+                <div class="logo-card loading-skeleton"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <div id="bioteste-footer"></div>
+    <script src="menurodape.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Função Genérica para carregar qualquer pasta em qualquer grid
+            function carregarGaleria(pasta, gridId) {
+                const grid = document.getElementById(gridId);
+                let count = 1;
+                let logosFound = 0;
+
+                function buscarImagem() {
+                    const img = new Image();
+                    // Caminho: pasta/1.png, pasta/2.png...
+                    const src = `${pasta}/${count}.png`; 
+                    
+                    img.src = src;
+
+                    img.onload = () => {
+                        // Limpa skeletons na primeira imagem encontrada
+                        if (count === 1) grid.innerHTML = '';
+
+                        const card = document.createElement('div');
+                        card.className = 'logo-card';
+                        card.style.animation = `fadeInUp 0.5s ease ${count * 0.05}s forwards`; 
+                        card.style.opacity = '0';
+
+                        const imageElement = document.createElement('img');
+                        imageElement.src = src;
+                        imageElement.className = 'logo-img';
+                        imageElement.alt = `${pasta} ${count}`;
+
+                        card.appendChild(imageElement);
+                        grid.appendChild(card);
+
+                        logosFound++;
+                        count++;
+                        buscarImagem(); // Busca próxima
+                    };
+
+                    img.onerror = () => {
+                        // Se não achou nenhuma imagem na pasta
+                        if (logosFound === 0) {
+                            grid.innerHTML = `
+                                <div class="no-logos">
+                                    <span class="material-symbols-rounded" style="font-size:30px; margin-bottom:5px;">image_not_supported</span>
+                                    <p>Nenhuma imagem encontrada em <strong>/${pasta}</strong>.</p>
+                                </div>
+                            `;
+                        } else {
+                            // Acabaram as imagens, remove skeletons se sobrou algum
+                            const skeletons = grid.querySelectorAll('.loading-skeleton');
+                            skeletons.forEach(el => el.remove());
+                        }
+                    };
+                }
+
+                buscarImagem();
+            }
+
+            // Chama a função para as duas pastas
+            carregarGaleria('convenios', 'grid-convenios');
+            carregarGaleria('planos', 'grid-planos');
+
+        });
+    </script>
+
+</body>
+</html>

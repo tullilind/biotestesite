@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-up Fitness - Bioteste</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CONFIGURAÇÕES GERAIS --- */
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #003d80;
+            --accent: #00c6ff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8faff;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0; padding: 0; color: var(--text-dark);
+        }
+
+        #bioteste-header { position: relative; z-index: 99999 !important; }
+
+        /* --- HERO SECTION (Topo) --- */
+        .page-hero {
+            /* Gradiente Laranja/Energia para Fitness */
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            padding: 80px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-hero::before {
+            content: ''; position: absolute; top: -50%; left: -10%; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none;
+        }
+
+        .hero-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+        .hero-icon { 
+            font-size: 64px; background: rgba(255,255,255,0.2); 
+            padding: 20px; border-radius: 50%; margin-bottom: 20px; 
+            backdrop-filter: blur(5px); display: inline-flex;
+        }
+        .page-hero h1 { font-size: 2.8rem; font-weight: 800; margin: 0 0 15px 0; letter-spacing: -1px; }
+        .page-hero p { font-size: 1.2rem; opacity: 0.9; line-height: 1.6; max-width: 600px; margin: 0 auto; }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        .main-container { max-width: 1100px; margin: -40px auto 60px auto; padding: 0 20px; position: relative; z-index: 10; }
+
+        /* Card de Introdução */
+        .intro-card {
+            background: white; border-radius: 20px; padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); margin-bottom: 40px;
+            text-align: center; border: 1px solid #e2e8f0;
+        }
+        .intro-card h2 { color: #ea580c; font-size: 1.8rem; margin-bottom: 15px; } /* Laranja */
+        .intro-card p { color: var(--text-light); font-size: 1.05rem; line-height: 1.6; }
+
+        /* Grid de Exames */
+        .exams-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        
+        .exam-card {
+            background: white; border-radius: 16px; padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #f1f5f9;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex; align-items: flex-start; gap: 20px;
+        }
+        .exam-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(234, 88, 12, 0.1); border-color: #fed7aa; }
+        
+        .exam-icon {
+            width: 50px; height: 50px; background: #fff7ed; color: #ea580c;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; flex-shrink: 0;
+        }
+        .exam-info h3 { font-size: 1.1rem; font-weight: 700; margin: 0 0 8px 0; color: var(--text-dark); }
+        .exam-info p { font-size: 0.9rem; color: var(--text-light); margin: 0; line-height: 1.5; }
+
+        /* Seção de Preparo e CTA */
+        .details-section { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+        
+        .prep-box {
+            background: #fff; padding: 35px; border-radius: 20px;
+            border-left: 5px solid #fbbf24; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .prep-box h3 { display: flex; align-items: center; gap: 10px; margin-top: 0; color: #b45309; }
+        .prep-list { list-style: none; padding: 0; margin: 20px 0 0 0; }
+        .prep-list li { margin-bottom: 15px; display: flex; gap: 12px; color: var(--text-dark); font-size: 0.95rem; }
+        .prep-list li i { color: #fbbf24; margin-top: 3px; }
+
+        .cta-box {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 20px; padding: 40px; text-align: center; color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .cta-box h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .cta-price { font-size: 1.1rem; opacity: 0.8; margin-bottom: 30px; display: block; }
+        
+        .btn-whatsapp {
+            background: #25d366; color: white; text-decoration: none;
+            padding: 15px 35px; border-radius: 50px; font-weight: 700; font-size: 1.1rem;
+            display: inline-flex; align-items: center; gap: 10px; transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp:hover { background: #1ebc57; transform: scale(1.05); }
+
+        @media (max-width: 768px) {
+            .page-hero h1 { font-size: 2rem; }
+            .details-section { grid-template-columns: 1fr; }
+            .main-container { margin-top: -20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bioteste-header"></div>
+
+    <main>
+        <section class="page-hero">
+            <div class="hero-content">
+                <div class="hero-icon"><span class="material-symbols-rounded">fitness_center</span></div>
+                <h1>Check-up Fitness</h1>
+                <p>Maximize seus resultados e treine com segurança. Monitore sua recuperação muscular, hormônios e metabolismo para atingir sua melhor performance.</p>
+            </div>
+        </section>
+
+        <div class="main-container">
+            
+            <div class="intro-card">
+                <h2>Performance e Saúde</h2>
+                <p>Seja para ganho de massa muscular, perda de peso ou melhora do condicionamento, entender como seu corpo funciona é essencial. Este check-up avalia marcadores de desgaste físico, saúde cardiovascular e equilíbrio hormonal.</p>
+            </div>
+
+            <h3 style="margin-bottom: 25px; font-size: 1.5rem; color: var(--text-dark);">Exames Inclusos</h3>
+            <div class="exams-grid">
+                
+                <div class="exam-card">
+                    <div class="exam-icon"><span class="material-symbols-rounded">hematology</span></div>
+                    <div class="exam-info">
+                        <h3>Hemograma Completo</h3>
+                        <p>Avalia a oxigenação do sangue (anemia) e imunidade, fundamentais para a resistência nos treinos.</p>
+                    </div>
+                </div>
+
+                <div class="exam-card">
+                    <div class="exam-icon"><span class="material-symbols-rounded">bolt</span></div>
+                    <div class="exam-info">
+                        <h3>Testosterona Total e Livre</h3>
+                        <p>Principal hormônio anabólico. Níveis adequados são cruciais para força, recuperação e ganho de massa.</p>
+                    </div>
+                </div>
+
+                <div class="exam-card">
+                    <div class="exam-icon"><span class="material-symbols-rounded">speed</span></div>
+                    <div class="exam-info">
+                        <h3>Cortisol Basal</h3>
+                        <p>O hormônio do estresse. Níveis altos podem indicar overtraining (excesso de treino) e catabolismo muscular.</p>
+                    </div>
+                </div>
+
+                <div class="exam-card">
+                    <div class="exam-icon"><span class="material-symbols-rounded">science</span></div>
+                    <div class="exam-info">
+                        <h3>CPK (Creatinofosfoquinase)</h3>
+                        <p>Marcador de lesão muscular. Ajuda a identificar se a intensidade do treino está adequada ou excessiva.</p>
+                    </div>
+                </div>
+
+                <div class="exam-card">
+                    <div class="exam-icon"><span class="material-symbols-rounded">monitor_heart</span></div>
+                    <div class="exam-info">
+                        <h3>Perfil Lipídico</h3>
+                        <p>Colesterol e Triglicerídeos. Saúde cardiovascular é a base para qualquer atividade física de alta intensidade.</p>
+                    </div>
+                </div>
+
+                <div class="exam-card">
+                    <div class="exam-icon"><span class="material-symbols-rounded">water_drop</span></div>
+                    <div class="exam-info">
+                        <h3>Glicose e Insulina</h3>
+                        <p>Avalia como seu corpo utiliza a energia (açúcar). Importante para estratégias de pré e pós-treino.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="details-section">
+                
+                <div class="prep-box">
+                    <h3><span class="material-symbols-rounded">info</span> Orientações de Preparo</h3>
+                    <ul class="prep-list">
+                        <li><i class="fas fa-check-circle"></i> <strong>Treino:</strong> Evitar exercícios físicos intensos 24h antes da coleta (altera o CPK).</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Jejum:</strong> Recomendado de 8 a 12 horas.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Suplementos:</strong> Informe o uso de Whey, Creatina ou hormônios.</li>
+                        <li><i class="fas fa-check-circle"></i> <strong>Álcool:</strong> Evitar consumo de bebidas alcoólicas 72h antes.</li>
+                    </ul>
+                </div>
+
+                <div class="cta-box">
+                    <h3>Agende Agora</h3>
+                    <span class="cta-price">Evolua seu treino com inteligência.</span>
+                    <a href="https://wa.me/5528988034796?text=Olá,%20gostaria%20de%20agendar%20o%20Check-up%20Fitness" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> Agendar pelo Zap
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <div id="bioteste-footer"></div>
+    <script src="menurodape.js"></script>
+
+</body>
+</html>

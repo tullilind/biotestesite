@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento Online - Bioteste</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CONFIGURAÇÕES GERAIS --- */
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #003d80;
+            --accent: #00c6ff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8faff;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0; padding: 0; color: var(--text-dark);
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+
+        #bioteste-header { position: relative; z-index: 99999 !important; }
+
+        /* --- CONTEÚDO PRINCIPAL --- */
+        main {
+            flex: 1; /* Empurra o rodapé para baixo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, #f8faff 0%, #eef2ff 100%);
+        }
+
+        .construction-card {
+            background: white;
+            max-width: 600px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px -10px rgba(0, 86, 179, 0.1);
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efeito de topo */
+        .construction-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .icon-box {
+            width: 100px; height: 100px;
+            background: #eff6ff;
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 30px auto;
+            font-size: 48px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Botão WhatsApp */
+        .btn-whatsapp-action {
+            display: inline-flex; align-items: center; gap: 10px;
+            background: #25d366; color: white;
+            padding: 15px 35px; border-radius: 50px;
+            font-weight: 700; font-size: 1.1rem;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+        .btn-whatsapp-action:hover {
+            background: #1ebc57; transform: scale(1.05);
+        }
+
+        /* Rodapé do Card (Créditos) */
+        .dev-credits {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+        .dev-credits strong {
+            color: var(--primary);
+        }
+
+        /* Animação Flutuante */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="bioteste-header"></div>
+
+    <main>
+        <div class="construction-card">
+            
+            <div class="icon-box">
+                <span class="material-symbols-rounded">engineering</span>
+            </div>
+
+            <h1>Em Desenvolvimento</h1>
+            
+            <p>
+                Esta página do sistema está sendo preparada com muito cuidado para melhor atendê-lo.
+                Em breve, o agendamento online estará 100% disponível.
+            </p>
+
+            <p style="font-size: 0.95rem;">Enquanto isso, você pode realizar seu agendamento diretamente pelo nosso WhatsApp:</p>
+
+            <a href="https://wa.me/5528988034796" class="btn-whatsapp-action">
+                <i class="fab fa-whatsapp"></i> Agendar Agora
+            </a>
+
+            <div class="dev-credits">
+                Sendo desenvolvido pelo estúdio <strong>Ar Solus</strong>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="bioteste-footer"></div>
+    <script src="menurodape.js"></script>
+
+</body>
+</html>

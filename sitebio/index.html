@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bioteste - Laboratório de Análises Clínicas</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. CONFIGURAÇÕES GERAIS --- */
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #003d80;
+            --accent: #00c6ff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8faff;
+            --card-shadow: 0 10px 30px -5px rgba(0, 86, 179, 0.08);
+            --hover-shadow: 0 20px 40px -5px rgba(0, 86, 179, 0.15);
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0; padding: 0; color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        #bioteste-header { position: relative; z-index: 99999 !important; }
+
+        /* --- 2. CARROSSEL PRINCIPAL --- */
+        .slider-container {
+            position: relative; 
+            width: 100%; 
+            /* PROPORÇÃO EXATA (PC e Celular) - Evita cortes */
+            aspect-ratio: 960 / 300; 
+            overflow: hidden; 
+            background-color: #0f172a; 
+        }
+
+        #main-slider-wrapper { width: 100%; height: 100%; position: relative; }
+        
+        .slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 1s ease-in-out; 
+            object-fit: cover; 
+            object-position: center;
+        }
+        .slide.active { opacity: 1; z-index: 1; }
+        
+        /* Setas */
+        .prev-btn, .next-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background-color: rgba(255,255,255,0.1); color: white;
+            border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+            padding: 0; cursor: pointer; z-index: 10;
+            border-radius: 50%; transition: 0.3s;
+            width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .prev-btn:hover, .next-btn:hover { background-color: var(--primary); border-color: var(--primary); }
+        .prev-btn { left: 20px; }
+        .next-btn { right: 20px; }
+        
+        .dots-container {
+            position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 10; display: flex; gap: 10px;
+        }
+        .dot {
+            width: 8px; height: 8px; background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%; cursor: pointer; transition: 0.3s;
+        }
+        .dot.active { background-color: white; transform: scale(1.4); }
+
+        /* Ajustes Mobile do Slider Principal */
+        @media (max-width: 768px) {
+            .prev-btn, .next-btn { width: 25px; height: 25px; font-size: 12px; }
+            .dots-container { bottom: 10px; gap: 5px; }
+            .dot { width: 6px; height: 6px; }
+        }
+
+        /* --- 3. ACESSO RÁPIDO --- */
+        .quick-access { 
+            margin-top: -60px; /* Sobe no PC */
+            position: relative; z-index: 20; padding-bottom: 60px; 
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .cards-wrapper { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        
+        /* Card Branco */
+        .qa-card-white {
+            background: white; border-radius: 24px; padding: 45px 30px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            box-shadow: var(--card-shadow); border: 1px solid rgba(255,255,255,1);
+            transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .qa-card-white:hover { transform: translateY(-10px); box-shadow: var(--hover-shadow); }
+        
+        .icon-circle-blue {
+            width: 80px; height: 80px; background: linear-gradient(135deg, #eef6ff 0%, #dbeafe 100%);
+            border-radius: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 25px;
+            color: var(--primary); font-size: 2.5rem; transition: transform 0.3s;
+        }
+        .qa-card-white:hover .icon-circle-blue { transform: scale(1.1) rotate(5deg); }
+        .qa-card-white h3 { font-size: 1.5rem; margin-bottom: 10px; color: var(--text-dark); font-weight: 700; }
+        .qa-card-white p { font-size: 1rem; color: var(--text-light); margin-bottom: 30px; line-height: 1.5; }
+        
+        .btn-outline {
+            border: 2px solid #e2e8f0; background: transparent; color: var(--text-light);
+            padding: 14px 35px; border-radius: 50px; font-weight: 600; text-transform: uppercase;
+            font-size: 0.85rem; transition: 0.3s; text-decoration: none; letter-spacing: 0.5px;
+        }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); background: #f0f9ff; }
+
+        /* Card Azul (Checkups) */
+        .card-checkups-container {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 24px; display: flex; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 86, 179, 0.25); color: white;
+            transition: 0.4s;
+        }
+        .card-checkups-container:hover { transform: translateY(-10px); }
+        .check-sidebar { background: rgba(0,0,0,0.1); width: 70px; display: flex; align-items: center; justify-content: center; }
+        .check-text-vertical { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 800; letter-spacing: 4px; font-size: 1.2rem; opacity: 0.9; }
+        .check-buttons-list { flex: 1; padding: 30px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+        
+        .btn-check-solid {
+            background: rgba(255,255,255,0.1); color: white; text-decoration: none;
+            padding: 12px 15px; border-radius: 12px; font-size: 0.95rem; font-weight: 500;
+            display: flex; align-items: center; gap: 15px; transition: 0.2s; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .btn-check-solid:hover { background: white; color: var(--primary); padding-left: 20px; }
+        .btn-check-solid i { width: 24px; text-align: center; }
+
+        /* --- 4. DESTAQUES (GRID INFERIOR) --- */
+        .highlights { padding: 60px 0 80px 0; background: white; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        
+        /* CARD PADRÃO (PC) */
+        .card-destaque { 
+            height: 220px; 
+            border-radius: 24px; overflow: hidden; 
+            box-shadow: var(--card-shadow); transition: 0.3s; position: relative;
+            background: #f8fafc; border: 1px solid #f1f5f9;
+            display: flex; align-items: center; padding: 0 50px;
+        }
+        .card-destaque:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+
+        /* WhatsApp */
+        .card-wpp-style {
+            background: linear-gradient(to right, #ffffff, #f0fdf4);
+            border-left: 8px solid #25d366; justify-content: space-between;
+        }
+        .wpp-info span { font-size: 1rem; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .wpp-info strong { font-size: 2.2rem; color: var(--text-dark); display: block; margin-top: 5px; font-weight: 800; letter-spacing: -1px; }
+        .btn-wpp-pill {
+            background: #25d366; color: white; padding: 15px 40px; border-radius: 50px;
+            font-weight: 700; border: none; cursor: pointer; font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: 0.3s;
+        }
+        .btn-wpp-pill:hover { background: #1ebc57; transform: scale(1.05); }
+
+        /* --- CARD DINÂMICO UNIDADES --- */
+        .card-units-slider {
+            position: relative; padding: 0 !important;
+            background: #000;
+        }
+        .unit-slide {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0; transition: opacity 1s ease;
+        }
+        .unit-slide.active { opacity: 1; }
+        .unit-slide img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+        .unit-content-overlay {
+            position: absolute; bottom: 0; left: 0; width: 100%; padding: 30px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+        }
+        .tag-unit { 
+            background: var(--accent); color: white; padding: 5px 12px; border-radius: 4px; 
+            font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; display: inline-block;
+        }
+        .unit-content-overlay h3 { font-size: 1.8rem; margin: 0; font-weight: 800; }
+        .unit-content-overlay p { margin: 5px 0 0 0; font-size: 0.95rem; opacity: 0.95; color: rgba(255,255,255,0.9); }
+        .unit-content-overlay p i { margin-right: 6px; color: var(--accent); }
+
+        /* COVID-19 */
+        .card-dark-style {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: white; justify-content: space-between;
+        }
+        .card-dark-style h2 { font-size: 3.5rem; font-weight: 800; line-height: 1; margin-top: 5px; color: #38bdf8; }
+
+        /* Preparo */
+        .card-preparo-split { background: white; padding: 0; display: flex; }
+        .preparo-icon-side {
+            width: 180px; height: 100%; background: #f1f5f9;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-light); transition: 0.3s;
+        }
+        .card-destaque:hover .preparo-icon-side { background: var(--primary); color: white; }
+        .preparo-content { flex: 1; padding: 0 40px; }
+        .preparo-content h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; color: var(--text-dark); line-height: 1.2; }
+        .btn-text-arrow { 
+            color: var(--primary); font-weight: 700; text-decoration: none; font-size: 1.1rem;
+            display: inline-flex; align-items: center; gap: 8px; transition: 0.3s;
+        }
+        .btn-text-arrow:hover { gap: 12px; }
+
+        /* --- 5. NOTÍCIAS --- */
+        .news-section { padding: 80px 0; background-color: #f8faff; border-top: 1px solid #e2e8f0; }
+        .section-header { text-align: center; margin-bottom: 50px; }
+        .section-header h2 { font-size: 2.2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 10px; }
+        .section-header p { color: var(--text-light); font-size: 1.1rem; }
+        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .news-mini-card {
+            background: white; border-radius: 16px; overflow: hidden;
+            box-shadow: var(--card-shadow); transition: 0.3s;
+            display: flex; flex-direction: column;
+        }
+        .news-mini-card:hover { transform: translateY(-5px); box-shadow: var(--hover-shadow); }
+        .news-icon-header {
+            height: 140px; display: flex; align-items: center; justify-content: center;
+            background: #eff6ff; color: var(--primary);
+        }
+        .news-icon-header span { font-size: 60px; }
+        .news-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
+        .news-tag { color: var(--accent); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 10px; }
+        .news-title { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; line-height: 1.4; }
+        .news-link-sm { margin-top: auto; color: var(--primary); font-weight: 600; text-decoration: none; font-size: 0.9rem; }
+
+        /* --- 6. PARCEIROS --- */
+        .partners-section { padding: 60px 0; background-color: #fff; overflow: hidden; text-align: center; border-top: 1px solid #f1f5f9; }
+        .partners-header h3 { color: var(--text-light); font-size: 0.9rem; margin-bottom: 40px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .partners-track-container { width: 100%; overflow: hidden; position: relative; }
+        .partners-track { display: flex; gap: 80px; width: max-content; padding: 10px 0; }
+        .partner-logo { height: 50px; width: auto; object-fit: contain; filter: grayscale(100%); opacity: 0.5; transition: 0.3s; }
+        .partner-logo:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.1); }
+        @keyframes scrollPartner { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* ================= RESPONSIVIDADE (MOBILE) ================= */
+        @media (max-width: 900px) {
+            .cards-wrapper, .grid-container, .news-grid { grid-template-columns: 1fr; gap: 20px; }
+            
+            /* -- AJUSTE DOS CARDS GERAIS -- */
+            .card-destaque { 
+                height: auto; /* Altura automática para texto não cortar */
+                padding: 30px; 
+                flex-direction: column; 
+                text-align: center;
+                gap: 20px;
+            }
+
+            /* -- CORREÇÃO DO CARD DE UNIDADES NO CELULAR (ESSENCIAL) -- */
+            /* Como ele usa position:absolute, precisa de altura fixa no mobile */
+            #unit-slider {
+                height: 300px !important; /* Força altura para imagens aparecerem */
+                min-height: 300px;
+                padding: 0 !important;
+            }
+
+            .card-dark-style { flex-direction: column; text-align: center; gap: 15px; padding: 30px; justify-content: center; }
+            .covid-text-block { text-align: center; }
+            .card-wpp-style { flex-direction: column; align-items: center; }
+        }
+
+        @media (max-width: 768px) {
+            /* AJUSTE PARA O ACESSO RÁPIDO NÃO COBRIR O BANNER */
+            .quick-access { 
+                margin-top: 20px; /* Remove a margem negativa */
+                padding-bottom: 40px;
+            }
+
+            .card-preparo-split { flex-direction: column; }
+            .preparo-icon-side { width: 100%; height: 100px; }
+            .preparo-content h3 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bioteste-header"></div>
+
+    <main>
+        <section class="slider-container">
+            <div id="main-slider-wrapper"></div> 
+            <button class="prev-btn" onclick="mudarSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="next-btn" onclick="mudarSlide(1)"><i class="fas fa-chevron-right"></i></button>
+            <div class="dots-container" id="main-slider-dots"></div>
+        </section>
+
+        <section class="quick-access">
+            <div class="container cards-wrapper">
+                <div class="qa-card-white">
+                    <div class="icon-circle-blue"><span class="material-symbols-rounded">calendar_month</span></div>
+                    <h3>Agendamento</h3>
+                    <p>Faça seu cadastro antecipado e ganhe tempo no atendimento.</p>
+                    <a href="agendamento.html" class="btn-outline">Acessar Agora</a>
+                </div>
+                <div class="card-checkups-container">
+                    <div class="check-sidebar"><span class="check-text-vertical">CHECK-UPS</span></div>
+                    <div class="check-buttons-list">
+                        <a href="checkup-infantil.html" class="btn-check-solid"><i class="fas fa-baby"></i> Infantil</a>
+                        <a href="checkup-adolescente.html" class="btn-check-solid"><i class="fas fa-user-graduate"></i> Adolescentes</a>
+                        <a href="checkup-mulher.html" class="btn-check-solid"><i class="fas fa-female"></i> Mulher</a>
+                        <a href="checkup-homem.html" class="btn-check-solid"><i class="fas fa-male"></i> Homem</a>
+                        <a href="checkup-nutricional.html" class="btn-check-solid"><i class="fas fa-apple-alt"></i> Nutricional</a>
+                        <a href="checkup-fitness.html" class="btn-check-solid"><i class="fas fa-running"></i> Fitness</a>
+                    </div>
+                </div>
+                <div class="qa-card-white">
+                    <div class="icon-circle-blue"><span class="material-symbols-rounded">labs</span></div>
+                    <h3>Resultados</h3>
+                    <p>Visualize seus laudos online com segurança e rapidez.</p>
+                    <a href="http://biotestefw.ddns.com.br:8888/LaboratorioWeb.dll/?RETU_LINK=LOGIN" target="_blank" class="btn-outline">Ver Laudos</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="highlights">
+            <div class="container grid-container">
+                
+                <div class="card-destaque card-wpp-style">
+                    <div class="wpp-info"><span>Atendimento WhatsApp</span><strong>(28) 98803-4796</strong></div>
+                    <button class="btn-wpp-pill" onclick="location.href='https://wa.me/5528988034796'">Orçamento</button>
+                </div>
+                
+                <div class="card-destaque card-units-slider" id="unit-slider">
+                    <div class="unit-slide active">
+                        <img src="fotosunidades/central1.jpg" onerror="this.src='https://placehold.co/600x400/0056b3/ffffff?text=Cachoeiro+Central'" alt="Cachoeiro Central">
+                        <div class="unit-content-overlay">
+                            <span class="tag-unit">Matriz</span>
+                            <h3>Cachoeiro (Central)</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> Praça Mauro Toledo Machado, 06</p>
+                        </div>
+                    </div>
+                    <div class="unit-slide">
+                        <img src="fotosunidades/jones1.jpg" onerror="this.src='https://placehold.co/600x400/0ea5e9/ffffff?text=Av.+Jones'" alt="Av. Jones">
+                        <div class="unit-content-overlay">
+                            <span class="tag-unit">Filial</span>
+                            <h3>Av. Jones dos Santos</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> Av. Jones dos Santos Neves, 160</p>
+                        </div>
+                    </div>
+                    <div class="unit-slide">
+                        <img src="fotosunidades/altonovo1.jpg" onerror="this.src='https://placehold.co/600x400/1e293b/ffffff?text=Alto+Novo+Parque'" alt="Alto Novo Parque">
+                        <div class="unit-content-overlay">
+                            <span class="tag-unit">Filial</span>
+                            <h3>Alto Novo Parque</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> Rua José Rosa Machado, 248</p>
+                        </div>
+                    </div>
+                    <div class="unit-slide">
+                        <img src="fotosunidades/jeronimo1.jpg" onerror="this.src='https://placehold.co/600x400/166534/ffffff?text=Jeronimo+Monteiro'" alt="Jerônimo Monteiro">
+                        <div class="unit-content-overlay">
+                            <span class="tag-unit">Filial</span>
+                            <h3>Jerônimo Monteiro</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> Avenida Dr José Farah, 331</p>
+                        </div>
+                    </div>
+                    <div class="unit-slide">
+                        <img src="fotosunidades/rionovo1.jpg" onerror="this.src='https://placehold.co/600x400/9a3412/ffffff?text=Rio+Novo'" alt="Rio Novo do Sul">
+                        <div class="unit-content-overlay">
+                            <span class="tag-unit">Filial</span>
+                            <h3>Rio Novo do Sul</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> Rua Coronel Joaquim Alves, 09</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-destaque card-dark-style">
+                    <span class="material-symbols-rounded" style="font-size: 80px; opacity: 0.8; color:#38bdf8;">coronavirus</span>
+                    <div class="covid-text-block">
+                        <span class="label">TESTE PARA</span>
+                        <h2>COVID-19</h2>
+                    </div>
+                </div>
+                
+                <div class="card-destaque card-preparo-split">
+                    <div class="preparo-icon-side">
+                        <span class="material-symbols-rounded" style="font-size: 64px;">medical_information</span>
+                    </div>
+                    <div class="preparo-content">
+                        <h3>Preparo para<br>exames</h3>
+                        <a href="preparo.html" class="btn-text-arrow">Ver instruções <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="news-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Fique por Dentro</h2>
+                    <p>Notícias, atualizações e informações importantes.</p>
+                </div>
+                <div class="news-grid">
+                    <div class="news-mini-card">
+                        <div class="news-icon-header" style="background:#e0f2fe; color:#0056b3;">
+                            <span class="material-symbols-rounded">workspace_premium</span>
+                        </div>
+                        <div class="news-body">
+                            <span class="news-tag">Qualidade</span>
+                            <h3 class="news-title">Certificação de Excelência PNCQ Renovada</h3>
+                            <a href="certificacoes.html" class="news-link-sm">Ler mais &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="news-mini-card">
+                        <div class="news-icon-header" style="background:#f0fdf4; color:#166534;">
+                            <span class="material-symbols-rounded">home_health</span>
+                        </div>
+                        <div class="news-body">
+                            <span class="news-tag" style="color:#166534;">Serviços</span>
+                            <h3 class="news-title">Agende sua Coleta Domiciliar pelo WhatsApp</h3>
+                            <a href="coleta.html" class="news-link-sm">Ler mais &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="news-mini-card">
+                        <div class="news-icon-header" style="background:#fff7ed; color:#9a3412;">
+                            <span class="material-symbols-rounded">monitor_heart</span>
+                        </div>
+                        <div class="news-body">
+                            <span class="news-tag" style="color:#9a3412;">Saúde</span>
+                            <h3 class="news-title">A importância do Check-up Preventivo</h3>
+                            <a href="index.html" class="news-link-sm">Ler mais &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="partners-section">
+            <div class="container">
+                <div class="partners-header"><h3>Convênios e Parceiros</h3></div>
+                <div class="partners-track-container">
+                    <div class="partners-track" id="track-convenios"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="partners-section" style="background-color: #fcfcfc;">
+            <div class="container">
+                <div class="partners-header"><h3>Planos de Saúde</h3></div>
+                <div class="partners-track-container">
+                    <div class="partners-track" id="track-planos"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="bioteste-footer"></div>
+    <script src="menurodape.js"></script>
+
+    <script>
+        function carregarBanner() {
+            const wrapper = document.getElementById('main-slider-wrapper');
+            const dots = document.getElementById('main-slider-dots');
+            let count = 1; let loaded = 0;
+
+            function tryLoad() {
+                const img = new Image();
+                img.src = `carroseis/${count}.png`;
+                img.onload = function() {
+                    const el = document.createElement('img');
+                    el.src = img.src; el.className = count === 1 ? 'slide active' : 'slide';
+                    wrapper.appendChild(el);
+                    const d = document.createElement('span');
+                    d.className = count === 1 ? 'dot active' : 'dot';
+                    d.onclick = () => irParaSlide(count - 1);
+                    dots.appendChild(d);
+                    loaded++; count++; tryLoad();
+                };
+                img.onerror = function() {
+                    if (loaded > 0) { atualizarGlobaisSlider(); iniciarTimer(); } 
+                    else { wrapper.innerHTML = '<img src="https://placehold.co/960x300/0f172a/FFF?text=Banner+960x300" class="slide active">'; }
+                };
+            }
+            tryLoad();
+        }
+
+        let slideIndex = 0, allSlides = [], allDots = [], timer;
+        function atualizarGlobaisSlider() { allSlides = document.querySelectorAll('.slide'); allDots = document.querySelectorAll('.dot'); }
+        function mostrarSlide(n) {
+            if (!allSlides.length) return;
+            if (n >= allSlides.length) slideIndex = 0;
+            if (n < 0) slideIndex = allSlides.length - 1;
+            allSlides.forEach(s => s.classList.remove('active'));
+            allDots.forEach(d => d.classList.remove('active'));
+            allSlides[slideIndex].classList.add('active');
+            allDots[slideIndex].classList.add('active');
+        }
+        function mudarSlide(n) { slideIndex += n; mostrarSlide(slideIndex); resetarTimer(); }
+        function irParaSlide(n) { slideIndex = n; mostrarSlide(slideIndex); resetarTimer(); }
+        function iniciarTimer() { if(timer) clearInterval(timer); timer = setInterval(() => { slideIndex++; mostrarSlide(slideIndex); }, 5000); }
+        function resetarTimer() { clearInterval(timer); iniciarTimer(); }
+        carregarBanner();
+
+        function iniciarUnitSlider() {
+            const slides = document.querySelectorAll('.unit-slide');
+            let currentUnit = 0;
+            if(slides.length === 0) return;
+            setInterval(() => {
+                slides[currentUnit].classList.remove('active');
+                currentUnit = (currentUnit + 1) % slides.length;
+                slides[currentUnit].classList.add('active');
+            }, 4000);
+        }
+        iniciarUnitSlider();
+
+        function carregarListaImagens(pasta, trackId) {
+            const track = document.getElementById(trackId);
+            let count = 1; let list = [];
+            function load() {
+                const img = new Image();
+                img.src = `${pasta}/${count}.png`;
+                img.onload = function() {
+                    const el = document.createElement('img'); el.src = img.src; el.className = 'partner-logo';
+                    track.appendChild(el); list.push(el); count++; load();
+                };
+                img.onerror = function() {
+                    if (list.length > 0) {
+                        list.forEach(i => track.appendChild(i.cloneNode(true))); 
+                        if (list.length < 5) list.forEach(i => track.appendChild(i.cloneNode(true)));
+                        track.style.animation = `scrollPartner ${list.length * 4}s linear infinite`;
+                    }
+                };
+            }
+            load();
+        }
+        carregarListaImagens('convenios', 'track-convenios');
+        carregarListaImagens('planos', 'track-planos');
+    </script>
+
+</body>
+</html>

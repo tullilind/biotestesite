@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificações - Bioteste</title>
+    
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- 1. CONFIGURAÇÕES GERAIS --- */
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #003d80;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8faff;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0; padding: 0; color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 2. CABEÇALHO --- */
+        #bioteste-header { position: relative; z-index: 99999 !important; }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 80px 20px 100px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 86, 179, 0.15);
+        }
+        
+        .page-header::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .page-header h1 { 
+            margin: 0; font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; 
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* --- 3. CONTEÚDO PRINCIPAL --- */
+        .content-section {
+            max-width: 1200px; margin: -60px auto 0 auto;
+            padding: 0 20px 80px 20px;
+            position: relative; z-index: 10;
+        }
+
+        .main-card {
+            background: white; border-radius: 24px; padding: 50px;
+            box-shadow: 0 20px 40px -5px rgba(0, 86, 179, 0.08);
+            border: 1px solid rgba(255,255,255,1);
+            min-height: 400px;
+            animation: fadeInUp 0.8s ease 0.4s forwards; opacity: 0;
+        }
+
+        .section-title { text-align: center; margin-bottom: 50px; }
+        .section-title h2 { color: var(--text-dark); font-size: 1.8rem; font-weight: 700; margin-bottom: 10px; }
+        .section-title p { color: var(--text-light); font-size: 1.1rem; }
+
+        /* --- 4. GRID DE CERTIFICADOS (MELHORADO) --- */
+        .certs-grid {
+            display: grid;
+            /* Grid inteligente: ajusta colunas automaticamente (min 280px, max 1fr) */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        /* CARD */
+        .cert-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex; flex-direction: column;
+            position: relative;
+            height: 100%; /* Garante altura igual em linha */
+        }
+
+        .cert-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 86, 179, 0.12);
+            border-color: var(--primary);
+        }
+
+        /* CAPA (LOGO) */
+        .cert-thumb {
+            height: 200px; /* Altura fixa da área da imagem */
+            background-color: #f8fafc;
+            display: flex; align-items: center; justify-content: center;
+            padding: 30px;
+            border-bottom: 1px solid #f1f5f9;
+            position: relative;
+        }
+        
+        .cert-thumb img {
+            max-width: 100%; max-height: 100%;
+            object-fit: contain; /* Garante que o logo inteiro apareça */
+            filter: grayscale(100%); opacity: 0.8;
+            transition: 0.4s;
+        }
+        .cert-item:hover .cert-thumb img { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
+
+        /* ETIQUETA (PDF/IMG) */
+        .file-type {
+            position: absolute; top: 15px; right: 15px;
+            background: white; padding: 6px 12px; border-radius: 50px;
+            font-size: 0.7rem; font-weight: 800; color: var(--text-light);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-transform: uppercase;
+            display: flex; align-items: center; gap: 5px;
+        }
+
+        /* CONTEÚDO */
+        .cert-info { 
+            padding: 25px; text-align: center; 
+            flex: 1; /* Ocupa o resto do espaço */
+            display: flex; flex-direction: column; 
+        }
+        
+        .cert-title {
+            font-size: 1.1rem; font-weight: 700; color: var(--text-dark);
+            margin-bottom: 20px; line-height: 1.5;
+        }
+
+        /* BOTÃO */
+        .btn-view {
+            margin-top: auto; /* Empurra para o fundo do card */
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            width: 100%; padding: 12px;
+            background: #eff6ff; color: var(--primary);
+            border-radius: 10px; text-decoration: none; font-weight: 700; font-size: 0.95rem;
+            transition: 0.2s; border: 1px solid transparent;
+        }
+        .btn-view:hover { 
+            background: var(--primary); color: white; 
+            box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2);
+        }
+
+        /* Erro */
+        .error-msg { text-align: center; color: #dc2626; padding: 20px; grid-column: 1/-1; }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            .page-header h1 { font-size: 2.2rem; }
+            .main-card { padding: 30px 20px; }
+            .certs-grid { grid-template-columns: 1fr; } /* 1 coluna no celular */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bioteste-header"></div>
+
+    <header class="page-header">
+        <h1>Certificações</h1>
+        <p>Qualidade comprovada.</p>
+    </header>
+
+    <section class="content-section">
+        <div class="main-card">
+            
+            <div class="section-title">
+                <span class="material-symbols-rounded" style="font-size: 56px; color: var(--primary); margin-bottom: 15px; display:block;">workspace_premium</span>
+                <h2>Galeria de Certificados</h2>
+                <p>Clique para visualizar o documento oficial.</p>
+            </div>
+            
+            <div id="certificados-grid" class="certs-grid">
+                </div>
+
+        </div>
+    </section>
+
+    <div id="bioteste-footer"></div>
+    <script src="menurodape.js"></script>
+
+    <script src="dados.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('certificados-grid');
+
+            // Verifica se a variável do arquivo dados.js foi carregada
+            if (typeof meusCertificados === 'undefined' || !meusCertificados || meusCertificados.length === 0) {
+                console.error("Erro: Variável meusCertificados não encontrada.");
+                grid.innerHTML = `
+                    <div class="error-msg">
+                        <span class="material-symbols-rounded" style="font-size:40px;">error</span>
+                        <p><strong>Erro ao carregar dados.js</strong></p>
+                        <p style="font-size:0.9rem;">Verifique se o arquivo <em>dados.js</em> está na mesma pasta.</p>
+                    </div>`;
+                return;
+            }
+
+            // Loop para criar os cards
+            meusCertificados.forEach((cert, index) => {
+                const capaImagem = `logo${cert.id}.png`;
+                const isPDF = cert.arquivo.toLowerCase().endsWith('.pdf');
+                const fileIcon = isPDF ? 'picture_as_pdf' : 'image';
+                const fileLabel = isPDF ? 'PDF' : 'IMG';
+
+                const card = document.createElement('div');
+                card.className = 'cert-item';
+                // Animação cascata na entrada
+                card.style.animation = `fadeInUp 0.6s ease ${index * 0.1}s forwards`;
+                card.style.opacity = '0';
+
+                card.innerHTML = `
+                    <div class="cert-thumb">
+                        <div class="file-type">
+                            <span class="material-symbols-rounded" style="font-size:14px">${fileIcon}</span> ${fileLabel}
+                        </div>
+                        <img src="certificados/${capaImagem}" alt="${cert.titulo}" onerror="this.src='https://placehold.co/200x150/f1f5f9/cbd5e1?text=Logo+${cert.id}'">
+                    </div>
+                    <div class="cert-info">
+                        <h3 class="cert-title">${cert.titulo}</h3>
+                        <a href="certificados/${cert.arquivo}" target="_blank" class="btn-view">
+                            <span class="material-symbols-rounded">visibility</span>
+                            Visualizar
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        });
+    </script>
+
+</body>
+</html>

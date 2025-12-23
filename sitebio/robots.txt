@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Bloquear pastas de sistema ou privadas (se houver)
+Disallow: /private/
+Disallow: /tmp/
+
+# Indica onde está o mapa do site (IMPORTANTE: Mude para seu domínio real)
+Sitemap: https://www.biotestelaboratorio.com.br/sitemap.xml
